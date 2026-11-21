@@ -145,7 +145,7 @@ ${
               title={
                 <>
                   WELCOME TO UROOJ GOLD & DIAMONDS
-                  <span className="block mt-2 text-base sm:text-lg md:text-xl italic tracking-wider text-[#A9823D]">
+                  <span className="block mt-3 text-xl sm:text-2xl md:text-3xl font-semibold italic tracking-wide text-[#071F1B]">
                     (A unit of Ghori Jewellers LLP)
                   </span>
                 </>
