@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-display: "Cinzel", "Cormorant Garamond", serif;
+  --color-luxury-charcoal: #171a19;
+  --color-luxury-ivory: #f7f3ea;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-sans);
+  color: var(--color-luxury-charcoal);
+  background-color: var(--color-luxury-ivory);
+}
+
+button { cursor: pointer; }
+
+.font-serif-luxury { font-family: var(--font-serif); }
+.font-display-luxury { font-family: var(--font-display); }
+.gold-shimmer { background: linear-gradient(110deg, #a9823d, #dfca8f, #c6a15b, #dfca8f, #a9823d) 0 0 / 200% 100%; }
+.text-gold-gradient {
+  -webkit-text-fill-color: transparent;
+  background: linear-gradient(135deg, #dfca8f, #c6a15b, #a9823d);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.scrollbar-none { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #071f1b; }
+::-webkit-scrollbar-thumb { background: #c6a15b; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #dfca8f; }
+
+/* Small replacements for the tailwindcss-animate utilities the original used */
+@keyframes u-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes u-slide-in-left { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes u-slide-in-right { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes u-slide-in-bottom { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes u-zoom-in { from { transform: scale(.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.animate-in { animation-duration: .3s; animation-fill-mode: both; animation-name: u-fade-in; }
+.animate-in.slide-in-from-left { animation-name: u-slide-in-left; }
+.animate-in.slide-in-from-right { animation-name: u-slide-in-right; }
+.animate-in.slide-in-from-bottom-2, .animate-in.slide-in-from-bottom-4 { animation-name: u-slide-in-bottom; }
+.animate-in.zoom-in-95 { animation-name: u-zoom-in; }
+.animate-in.fade-in { animation-name: u-fade-in; }
