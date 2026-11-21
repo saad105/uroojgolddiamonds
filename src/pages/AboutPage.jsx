@@ -135,14 +135,20 @@ ${
           <div className="lg:col-span-7 space-y-6">
             <SectionHeading
               eyebrow="Hyderabad's Premium Jewelry Destination"
-              title="WELCOME TO UROOJ GOLD & DIAMONDS"
+              title={
+                <>
+                  WELCOME TO UROOJ GOLD & DIAMONDS
+                  <span className="block mt-2 text-base sm:text-lg md:text-xl italic tracking-wider text-[#A9823D]">
+                    (A unit of Ghori Jewellers LLP)
+                  </span>
+                </>
+              }
               subtitle=""
               alignment="left"
               className="mb-0"
             />
             <div className="bg-[#FAF7F2] p-6 rounded-2xl border-l-4 border-[#071F1B] shadow-sm text-sm text-[#171A19]/90 font-normal leading-relaxed">
-              Welcome to Urooj Gold & Diamonds <span className="font-semibold text-[#071F1B]">(A unit of Ghori Jewellers LLP)</span>,
-              Hyderabad’s premium jewelry destination. Located at the bustling Mehdipatnam X
+              Welcome to Urooj Gold & Diamonds, Hyderabad’s premium jewelry destination. Located at the bustling Mehdipatnam X
               Road, we blend cultural legacy with modern artistry. Every piece we craft is designed to celebrate life's most
               precious milestones—from a daughter's wedding day to everyday celebrations. We specialize in high-quality,
               lightweight, and heavy bridal jewelry engineered for both modern luxury and traditional heritage.
