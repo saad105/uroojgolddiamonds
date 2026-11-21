@@ -14,22 +14,29 @@ Where the live gold rates are stored: `store_settings.gold_rates` (JSON) in the 
 `id = 'urooj_store_main'`. The offers banner (`offers_config`) and welcome overlay
 (`welcome_announcement`) are in the same row.
 
-## Scripts (run in order in Dashboard → SQL Editor)
+## Scripts (Dashboard → SQL Editor → New query → Run)
 
 | File | What it does |
 |---|---|
-| `01_original_schema.sql` | The original site's own setup script, word for word (Admin → Cloud Database → "Copy SQL"): 5 tables, RLS policies, `product-images` bucket |
-| `02_accounts_wishlist_cart.sql` | `profiles`, `wishlist_items`, `cart_items`. The site's code uses them but the original script never created them. Each customer can only access their own rows |
-| `03_realtime.sql` | Adds the 5 tables to Realtime so rate/product changes appear instantly on open pages |
+| `schema.sql` | **The complete script. Run this once.** Creates all 8 tables, RLS policies, the `product-images` bucket and Realtime. Safe to re-run |
 | `export_live_schema.sql` | **Read-only.** Prints the exact definitions currently in your live database |
 
-All scripts can be safely re-run. Each was tested on Postgres: run twice, then the export
-output was used to rebuild the schema on an empty database.
+`schema.sql` has three parts:
+
+- **A** · The original site's own setup script, word for word (Admin → Cloud Database → "Copy SQL"):
+  `products`, `store_settings`, `appointments`, `customer_inquiries`, `newsletter_subscribers`,
+  their policies and the photo bucket.
+- **B** · `profiles`, `wishlist_items`, `cart_items`. The site's code uses them but the original
+  script never created them. Each customer can only access their own rows.
+- **C** · Realtime for the 5 tables the site listens to.
+
+Tested on Postgres: runs cleanly twice in a row, and the export output rebuilds the same schema
+on an empty database.
 
 ## Getting exactly what's in the live database
 
-Scripts 01–03 rebuild what the website needs. Anything someone added by hand in the dashboard
-won't be in them. To capture the real live state:
+`schema.sql` builds what the website needs. Anything someone added by hand in the dashboard
+won't be in it. To capture the real live state:
 
 **Option A: SQL Editor (no install).** Run `export_live_schema.sql`, then copy the `ddl`
 column (or Export → CSV). You get tables, indexes, RLS policies, functions, triggers, views,

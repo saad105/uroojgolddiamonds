@@ -379,7 +379,7 @@ export async function testSupabaseConnection() {
     const { error: e2 } = await sb.from('store_settings').select('id').limit(1);
     const latencyMs = Date.now() - start;
     if (error && error.code === '42P01')
-      return { connected: false, latencyMs, error: 'Database connected, but tables do not exist yet. Run the scripts in the supabase/ folder (01, 02, 03) in your Supabase SQL Editor.' };
+      return { connected: false, latencyMs, error: 'Database connected, but tables do not exist yet. Run supabase/schema.sql in your Supabase SQL Editor.' };
     if (error && e2) return { connected: false, latencyMs, error: `Supabase error: ${error.message || e2.message}` };
     return {
       connected: true,
