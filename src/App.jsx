@@ -21,7 +21,7 @@ import CartDrawer from './modals/CartDrawer.jsx';
 import WishlistDrawer from './modals/WishlistDrawer.jsx';
 import AccountModal from './modals/AccountModal.jsx';
 import SearchModal from './modals/SearchModal.jsx';
-import LegalModal from './modals/LegalModal.jsx';
+import PoliciesPage from './pages/PoliciesPage.jsx';
 import FloatingActions from './components/FloatingActions.jsx';
 import WelcomeAnnouncement from './components/WelcomeAnnouncement.jsx';
 import AdminPanel from './admin/AdminPanel.jsx';
@@ -139,16 +139,18 @@ function App() {
     [isWishlistOpen, setIsWishlistOpen] = useState(false),
     [isAccountOpen, setIsAccountOpen] = useState(false),
     [isSearchOpen, setIsSearchOpen] = useState(false),
-    [isLegalOpen, setIsLegalOpen] = useState(false),
-    [legalTab, setLegalTab] = useState('regulatory'),
+    [policySection, setPolicySection] = useState('regulatory'),
+    [policyScrollRequest, setPolicyScrollRequest] = useState(0),
     [isCalculatorOpen, setIsCalculatorOpen] = useState(false),
     [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false),
     [sizeGuideTab, setSizeGuideTab] = useState('ring'),
     [isVideoCallOpen, setIsVideoCallOpen] = useState(false),
     [isSavingsPlanOpen, setIsSavingsPlanOpen] = useState(false),
-    openLegalModal = (J = 'regulatory') => {
-      setLegalTab(J);
-      setIsLegalOpen(true);
+    // Policy links open the Policies page and scroll to the requested section
+    openLegalModal = (section = 'regulatory') => {
+      setPolicySection(section);
+      setPolicyScrollRequest((n) => n + 1);
+      setCurrentPage('policies');
     },
     openSizeGuide = (J = 'ring') => {
       setSizeGuideTab(J);
@@ -390,6 +392,7 @@ function App() {
           />
         )}
         {currentPage === 'about' && <AboutPage onOpenAppointment={() => openAppointment()} onOpenLegalModal={openLegalModal} />}
+        {currentPage === 'policies' && <PoliciesPage initialSection={policySection} scrollRequest={policyScrollRequest} />}
       </main>
       <Footer
         onNavigate={navigate}
@@ -492,7 +495,6 @@ function App() {
         onQuickView={(J) => setQuickViewProduct(J)}
         products={products}
       />
-      <LegalModal isOpen={isLegalOpen} onClose={() => setIsLegalOpen(false)} defaultTab={legalTab} />
       <FloatingActions />
       <WelcomeAnnouncement isOpen={showAnnouncement} onClose={closeAnnouncement} data={announcement} />
       <AdminPanel isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />

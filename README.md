@@ -61,10 +61,10 @@ src/
   lib/AuthContext.jsx     customer sign-up/sign-in, profile, cloud wishlist & cart
   lib/format.js           ₹ formatting, WhatsApp links
   components/             Header, LiveRateBar, Footer, ProductCard, FilterPanel, WelcomeAnnouncement…
-  pages/                  Home, Gold, Diamonds, Collections, About
+  pages/                  Home, Gold, Diamonds, Collections, About, Policies (all legal sections)
   modals/                 Quick view, Product detail, Cart, Wishlist, Account, Search, Appointment,
                           Custom design, Gold calculator, Size guide, Price breakup, Video call,
-                          Savings plan, Legal/policies
+                          Savings plan
   admin/AdminPanel.jsx    showroom admin
 ```
 
