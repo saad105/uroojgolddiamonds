@@ -22,13 +22,14 @@ import WishlistDrawer from './modals/WishlistDrawer.jsx';
 import AccountModal from './modals/AccountModal.jsx';
 import SearchModal from './modals/SearchModal.jsx';
 import PoliciesPage from './pages/PoliciesPage.jsx';
+import { DEFAULT_POLICY_SECTION, PAGE_TITLES, parseLocation, pathFor, setPath } from './lib/routes.js';
 import FloatingActions from './components/FloatingActions.jsx';
 import WelcomeAnnouncement from './components/WelcomeAnnouncement.jsx';
 import AdminPanel from './admin/AdminPanel.jsx';
 
 function App() {
   const { user, fetchUserWishlist, saveWishlistToCloud, fetchUserCart, saveCartToCloud } = useAuth(),
-    [currentPage, setCurrentPage] = useState('home'),
+    [currentPage, setCurrentPage] = useState(() => parseLocation().page),
     [initialCategory, setInitialCategory] = useState(undefined),
     [isAdminOpen, setIsAdminOpen] = useState(false),
     [products, setProducts] = useState(() => getProducts()),
@@ -139,7 +140,7 @@ function App() {
     [isWishlistOpen, setIsWishlistOpen] = useState(false),
     [isAccountOpen, setIsAccountOpen] = useState(false),
     [isSearchOpen, setIsSearchOpen] = useState(false),
-    [policySection, setPolicySection] = useState('regulatory'),
+    [policySection, setPolicySection] = useState(() => parseLocation().section || DEFAULT_POLICY_SECTION),
     [policyScrollRequest, setPolicyScrollRequest] = useState(0),
     [isCalculatorOpen, setIsCalculatorOpen] = useState(false),
     [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false),
@@ -147,11 +148,14 @@ function App() {
     [isVideoCallOpen, setIsVideoCallOpen] = useState(false),
     [isSavingsPlanOpen, setIsSavingsPlanOpen] = useState(false),
     // Policy links open the Policies page and scroll to the requested section
-    openLegalModal = (section = 'regulatory') => {
+    openLegalModal = (section = DEFAULT_POLICY_SECTION) => {
       setPolicySection(section);
       setPolicyScrollRequest((n) => n + 1);
       setCurrentPage('policies');
+      setPath(pathFor('policies', section));
     },
+    // Called by the Policies page when a tab is clicked: keep the URL in sync without a new history entry
+    onPolicySectionChange = (section) => setPath(pathFor('policies', section), { replace: true }),
     openSizeGuide = (J = 'ring') => {
       setSizeGuideTab(J);
       setIsSizeGuideOpen(true);
@@ -166,6 +170,7 @@ function App() {
     scrollToPromises = () => {
       if (currentPage !== 'home') {
         setCurrentPage('home');
+        setPath('/');
         setTimeout(() => {
           window.scrollTo({
             top: 1200,
@@ -304,9 +309,11 @@ function App() {
         return He;
       });
     },
-    navigate = (J, ke) => {
-      setCurrentPage(J);
-      setInitialCategory(ke);
+    navigate = (page, category) => {
+      if (page === 'policies') return openLegalModal();
+      setCurrentPage(page);
+      setInitialCategory(category);
+      setPath(pathFor(page));
       window.scrollTo({
         top: 0,
         behavior: 'smooth',
@@ -316,6 +323,26 @@ function App() {
       setAppointmentProduct(J || null);
       setIsAppointmentOpen(true);
     };
+  // Browser back/forward: show the page for the new URL
+  useEffect(() => {
+    const onPopState = () => {
+      const { page, section } = parseLocation();
+      setCurrentPage(page);
+      setInitialCategory(undefined);
+      if (page === 'policies') {
+        setPolicySection(section);
+        setPolicyScrollRequest((n) => n + 1);
+      } else {
+        window.scrollTo({ top: 0 });
+      }
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+  // Tab title per page
+  useEffect(() => {
+    document.title = PAGE_TITLES[currentPage] || PAGE_TITLES.home;
+  }, [currentPage]);
   return (
     <div className="min-h-screen bg-[#F7F3EA] text-[#171A19] flex flex-col font-sans selection:bg-[#30565B] selection:text-[#DFCA8F]">
       <Header
@@ -392,7 +419,9 @@ function App() {
           />
         )}
         {currentPage === 'about' && <AboutPage onOpenAppointment={() => openAppointment()} onOpenLegalModal={openLegalModal} />}
-        {currentPage === 'policies' && <PoliciesPage initialSection={policySection} scrollRequest={policyScrollRequest} />}
+        {currentPage === 'policies' && (
+          <PoliciesPage initialSection={policySection} scrollRequest={policyScrollRequest} onSectionChange={onPolicySectionChange} />
+        )}
       </main>
       <Footer
         onNavigate={navigate}

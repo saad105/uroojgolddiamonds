@@ -52,7 +52,7 @@ const PolicySection = ({ id, label, Icon, children }) => (
  * `initialSection` + `scrollRequest` (a counter bumped on every link click) scroll the page
  * to the requested section, even when the page is already open.
  */
-const PoliciesPage = ({ initialSection = 'regulatory', scrollRequest = 0 }) => {
+const PoliciesPage = ({ initialSection = 'regulatory', scrollRequest = 0, onSectionChange }) => {
   const [active, setActive] = useState(initialSection);
   const [headerHeight, setHeaderHeight] = useState(0);
   const tabsRef = useRef(null);
@@ -138,7 +138,10 @@ const PoliciesPage = ({ initialSection = 'regulatory', scrollRequest = 0 }) => {
             <button
               key={id}
               data-tab={id}
-              onClick={() => scrollToSection(id)}
+              onClick={() => {
+                scrollToSection(id);
+                onSectionChange?.(id);
+              }}
               className={`py-3 px-3 text-[11px] font-semibold tracking-wider uppercase border-b-2 transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${active === id ? 'border-[#30565B] text-[#183C40] bg-white rounded-t-lg' : 'border-transparent text-[#6B6862] hover:text-[#183C40]'}`}
             >
               <Icon className="w-3.5 h-3.5 text-[#C6A15B]" />
