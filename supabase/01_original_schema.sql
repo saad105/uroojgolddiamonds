@@ -1,4 +1,7 @@
 -- ==============================================================================
+-- 01 · ORIGINAL SCHEMA (verbatim from the original site's Admin → Cloud Database → "Copy SQL")
+-- Creates: products, store_settings, appointments, customer_inquiries,
+--          newsletter_subscribers, RLS policies, and the product-images storage bucket.
 -- UROOJ GOLD & DIAMONDS COMPLETE SUPABASE DATABASE SCHEMA
 -- Run this in your Supabase Project -> SQL Editor (New Query -> Run)
 -- ==============================================================================
@@ -134,48 +137,3 @@ CREATE POLICY "Allow Uploads Product Images" ON storage.objects FOR INSERT WITH 
 DROP POLICY IF EXISTS "Allow Updates Product Images" ON storage.objects;
 CREATE POLICY "Allow Updates Product Images" ON storage.objects FOR UPDATE USING (bucket_id = 'product-images');
 
--- 7. CUSTOMER PROFILES, WISHLIST & CART (used by the Account / Wishlist / Bag features)
-CREATE TABLE IF NOT EXISTS public.profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  full_name TEXT,
-  phone TEXT,
-  city TEXT DEFAULT 'Hyderabad',
-  preferred_metal TEXT DEFAULT 'Gold 22K',
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-CREATE TABLE IF NOT EXISTS public.wishlist_items (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  product_id TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-CREATE TABLE IF NOT EXISTS public.cart_items (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  product_id TEXT NOT NULL,
-  quantity INT DEFAULT 1,
-  selected_size TEXT,
-  custom_engraving TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.wishlist_items ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.cart_items ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "Own profile" ON public.profiles;
-CREATE POLICY "Own profile" ON public.profiles FOR ALL USING (auth.uid() = id) WITH CHECK (auth.uid() = id);
-DROP POLICY IF EXISTS "Own wishlist" ON public.wishlist_items;
-CREATE POLICY "Own wishlist" ON public.wishlist_items FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
-DROP POLICY IF EXISTS "Own cart" ON public.cart_items;
-CREATE POLICY "Own cart" ON public.cart_items FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
-
--- 8. REALTIME: let the website receive live rate / product updates instantly
--- (skip these two lines if the tables are already in the publication)
-ALTER PUBLICATION supabase_realtime ADD TABLE public.store_settings;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.products;
-
--- ==============================================================================
--- SECURITY NOTE: the "Allow All" policies above (copied from the original site)
--- let ANYONE holding the public anon key edit products and rates. The admin panel
--- is protected only by a client-side PIN. For production, restrict INSERT/UPDATE
--- on products/store_settings to an authenticated admin role or a server function.
--- ==============================================================================

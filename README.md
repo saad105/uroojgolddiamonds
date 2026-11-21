@@ -33,7 +33,8 @@ VITE_SUPABASE_ANON_KEY=...
 
 Without them the site runs fully offline on `localStorage` with the bundled defaults.
 Admin → Cloud Database can also override the credentials per browser.
-For a fresh project, run `supabase_schema.sql` in the Supabase SQL editor.
+For a fresh project, run the scripts in [`supabase/`](supabase/) (01 → 03) in the Supabase SQL editor.
+That folder also has `export_live_schema.sql` to export the exact live database definitions.
 
 > ⚠️ With the current `.env`, this clone reads **and writes** the same database as the live
 > site. Saving rates/products/offers in the clone's admin panel changes the live website.

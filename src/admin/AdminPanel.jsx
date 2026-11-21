@@ -1810,7 +1810,7 @@ CREATE POLICY "Allow Updates Product Images" ON storage.objects FOR UPDATE USING
                           <div className="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-[11px] flex items-center justify-between gap-2">
                             <span>
                               {'If tables or buckets are missing, run '}
-                              <code>supabase_schema.sql</code>
+                              <code>supabase/01–03 *.sql</code>
                               {' in your Supabase SQL Editor.'}
                             </span>
                             <button
