@@ -30,6 +30,7 @@ const AboutPage = ({ onOpenAppointment, onOpenLegalModal }) => {
     [S, k] = useState(false),
     [O, T] = useState(''),
     [R, P] = useState(false),
+    [marketingConsent, setMarketingConsent] = useState(true),
     V = (G) => {
       if ((G.preventDefault(), !r || !c || !v || !C)) {
         return;
@@ -40,7 +41,7 @@ const AboutPage = ({ onOpenAppointment, onOpenLegalModal }) => {
         email: u || undefined,
         subject: p || 'General Jewellery Consultation',
         interest: b,
-        message: v,
+        message: `${v}\n\nMarketing consent (RCS SMS & WhatsApp): ${marketingConsent ? 'Yes' : 'No'}`,
         source: 'about_contact_enquiry',
       })
         .then((oe) => {
@@ -61,6 +62,7 @@ const AboutPage = ({ onOpenAppointment, onOpenLegalModal }) => {
             category: b,
             subject: p,
             message: v,
+            marketingConsent,
             createdAt: new Date().toISOString(),
           };
         localStorage.setItem('urooj_enquiries', JSON.stringify([ye, ...oe]));
@@ -76,7 +78,12 @@ ${
 }*Category:* ${b}
 *Subject:* ${p || 'General Jewellery Consultation'}
 *Message:* ${v}
-*Consent:* I hereby grant explicit consent under the DPDP Act 2023 to Urooj Gold & Diamonds to process my contact details solely to respond to this enquiry.`,
+*Consent:* I hereby grant explicit consent under the DPDP Act 2023 to Urooj Gold & Diamonds to process my contact details solely to respond to this enquiry.${
+  marketingConsent
+    ? `
+*Updates:* I agree to receive information regarding gold and diamonds through RCS SMS and WhatsApp from Urooj Gold and Diamonds (A unit of Ghori Jewellers LLP).`
+    : ''
+}`,
         W = whatsappLink(X);
       T(W);
       k(true);
@@ -596,6 +603,18 @@ ${
                         {
                           ' for Urooj Gold & Diamonds to process my contact details solely for handling this enquiry via WhatsApp (+91 99661 62100).'
                         }
+                      </span>
+                    </label>
+                    <label className="flex items-start gap-2.5 cursor-pointer mt-3">
+                      <input
+                        type="checkbox"
+                        checked={marketingConsent}
+                        onChange={(G) => setMarketingConsent(G.target.checked)}
+                        className="mt-0.5 rounded border-[#C6A15B] text-[#071F1B] focus:ring-[#071F1B]"
+                      />
+                      <span className="text-[11px] text-[#6B6862] leading-tight font-light">
+                        I agree to receive information regarding gold and diamonds through <strong>RCS SMS</strong> and{' '}
+                        <strong>WhatsApp</strong> from Urooj Gold and Diamonds (A unit of Ghori Jewellers LLP).
                       </span>
                     </label>
                   </div>
